@@ -1,10 +1,11 @@
 ﻿using Confluent.Kafka;
+using DataCrawler.Model.Entity;
 using DataCrawler.Model.InterFace;
 using System;
 using System.Threading.Tasks;
 
 namespace DataCrawler.Producer
-{   
+{
     public class KafkaSender : ISender
     {
         private readonly IKafkaClientProvider _kafkaClientProvider;
@@ -16,20 +17,49 @@ namespace DataCrawler.Producer
             _logger = logger;
         }
 
-        public async Task SendAsync(object message)
-        {            
-            using (var producer = _kafkaClientProvider.CreateClient<Null, string>())
+        public async Task SendAsync(byte[] message)
+        {
+            var producer = _kafkaClientProvider.CreateClient<Null, byte[]>();
+            try
             {
-                try
-                {
-                    //TODO: Also implement this method with specified partition.
-                    var recordMetaData = await producer.ProduceAsync("Greeting", new Message<Null, string> { Value = "Hi, Here's your message" });
-                    _logger.Log($"Delivered '{recordMetaData.Value}' to '{recordMetaData.TopicPartitionOffset}'");
-                }
-                catch (ProduceException<Null, string> e)
-                {
-                    _logger.Log($"Delivery failed: {e.Error.Reason}");
-                }
+                //TODO: Also implement this method with specified partition.
+                var recordMetaData = await producer.ProduceAsync("Greeting", new Message<Null, byte[]> { Value = message });
+                _logger.Log($"Delivered '{recordMetaData.Value}' to '{recordMetaData.TopicPartitionOffset}'");
+            }
+            catch (ProduceException<Null, string> e)
+            {
+                _logger.Log($"Delivery failed: {e.Error.Reason}");
+            }
+            catch (Exception e)
+            {
+                _logger.Log(e.ToString());
+            }
+            finally
+            {
+                producer.Dispose();
+            }
+
+        }
+        public async Task SendAsync(object message, KafkaClientSetting clientSettings)
+        {
+            var producer = _kafkaClientProvider.CreateClient<Null, string>(clientSettings);
+
+            try
+            {
+                var recordMetaData = await producer.ProduceAsync("", new Message<Null, string> { Value = "With Configuration" });
+                _logger.Log($"Delivered '{recordMetaData.Value}' to '{recordMetaData.TopicPartitionOffset}'");
+            }
+            catch (ProduceException<Null, string> e)
+            {
+                _logger.Log($"Delivery failed: {e.Error.Reason}");
+            }
+            catch (Exception e)
+            {
+                _logger.Log(e.ToString());
+            }
+            finally
+            {
+                producer.Dispose();
             }
         }
 

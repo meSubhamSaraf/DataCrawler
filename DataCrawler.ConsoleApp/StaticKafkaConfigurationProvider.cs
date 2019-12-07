@@ -18,13 +18,22 @@ namespace DataCrawler.ConsoleApp
 
         public KafkaClientSetting GetSettings()
         {
-            var  clientSetting = JObject.Parse(File.ReadAllText(@"../../../appsettings.json"));
+
+            var  clientSetting = JObject.Parse(File.ReadAllText(Path.Combine(Directory.GetCurrentDirectory(), "appsettings.json")));
             return new KafkaClientSetting()
             {
                 //TODO: Need to add validators and null checks for the values here
-                //TODO: Need to make Constants file\
-                KafkaEndpoit = clientSetting.SelectToken("KafkaEndpoint").Value<string>(),
-                NumberOfPartitions = clientSetting.SelectToken("NumberOfPartitions").Value<string>(),
+                //TODO: Need to make Constants file
+                KafkaEndpoit = string.IsNullOrEmpty(clientSetting.SelectToken("KafkaEndpoint").Value<string>())? "" : clientSetting.SelectToken("KafkaEndpoint").Value<string>(),
+                NumberOfPartitions = string.IsNullOrEmpty(clientSetting.SelectToken("NumberOfPartitions").Value<string>())? "1" : clientSetting.SelectToken("NumberOfPartitions").Value<string>(),
+                //Acknowledgement = string.IsNullOrEmpty(clientSetting.SelectToken("Ack").Value<string>())? "all" : clientSetting.SelectToken("NumberOfPartitions").Value<string>(),
+                //BackPressureThreshold = string.IsNullOrEmpty(clientSetting.SelectToken("backpressurethres").Value<string>())? 1 : clientSetting.SelectToken("backpressu").Value<int>(),
+                //LingerInMilliSecond = string.IsNullOrEmpty(clientSetting.SelectToken("linger").Value<string>())? 0 : clientSetting.SelectToken("linger").Value<double>(),
+                //MaximumKilloByteBuffering = string.IsNullOrEmpty(clientSetting.SelectToken("MaximumkilloBytesBuf").Value<string>())? 0 : clientSetting.SelectToken("Maximumkillobytebuff").Value<int>(),
+                //BatchNumber = string.IsNullOrEmpty(clientSetting.SelectToken("batchNumber").Value<string>())? 0 : clientSetting.SelectToken("batchNumber").Value<int>(),
+                //MaximumMessageBuffering = string.IsNullOrEmpty(clientSetting.SelectToken("maximummessagebuff").Value<string>())? 0 : clientSetting.SelectToken("maximumMessageBuffering").Value<int>(),
+                //MaximumNumberOfRetries = string.IsNullOrEmpty(clientSetting.SelectToken("retries").Value<string>()) ? 2 : clientSetting.SelectToken("NumberOfPartitions").Value<int>(),
+                //Topic = string.IsNullOrEmpty(clientSetting.SelectToken("Topic").Value<string>())? "" : clientSetting.SelectToken("Topic").Value<string>(),
 
             };
         }

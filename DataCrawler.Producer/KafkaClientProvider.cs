@@ -1,4 +1,5 @@
 ﻿using Confluent.Kafka;
+using DataCrawler.Model.Entity;
 using DataCrawler.Model.InterFace;
 using System;
 
@@ -17,6 +18,23 @@ namespace DataCrawler.Producer
         {
             var config = _kafkaConfigurationProvider.GetSettings();
             var producerConfig = new ProducerConfig { BootstrapServers = config.KafkaEndpoit};
+            //producerConfig.MessageSendMaxRetries = config.MaximumNumberOfRetries;
+            //producerConfig.RetryBackoffMs
+            //producerConfig.Acks = Acks.All; //config.Acknowledgement;
+            //producerConfig.BatchNumMessages = config.BatchNumber;
+            //producerConfig.LingerMs = config.LingerInMilliSecond;
+            //producerConfig.QueueBufferingBackpressureThreshold = config.BackPressureThreshold;  // Size transmitted from broker and waiting in queue
+            //producerConfig.QueueBufferingMaxKbytes = config.MaximumKilloByteBuffering;     //For the size outstanding to be sent to producer queue
+            //producerConfig.QueueBufferingMaxMessages = config.MaximumMessageBuffering;
+
+
+            return new ProducerBuilder<TKey, TValue>(producerConfig).Build();
+        }
+
+        public IProducer<TKey, TValue> CreateClient<TKey, TValue>(KafkaClientSetting clientSettings)
+        {
+            var config = clientSettings;
+            var producerConfig = new ProducerConfig { BootstrapServers = config.KafkaEndpoit };
             //producerConfig.MessageSendMaxRetries = config.MaximumNumberOfRetries;
             ////producerConfig.RetryBackoffMs
             //producerConfig.Acks = Acks.All; //config.Acknowledgement;
