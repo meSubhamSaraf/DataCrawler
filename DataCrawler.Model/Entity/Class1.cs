@@ -6,18 +6,21 @@ namespace DataCrawler.Model.Entity
 {
     public class KafkaClientSetting
     {
-        public string KafkaEndpoit { get; set; }
+        /// <summary>
+        /// Kafka Endpoint 
+        /// Comma (,) seperated multiple endpoints
+        /// host:port
+        /// </summary>
+        public string KafkaEndpoints { get; set; }
 
         public string NumberOfPartitions { get; set; }
-
-        public string Topic { get; set; }
 
         /// <summary>
         ///Type of acknowldgement required for the Message Exchange 
         /// </summary>
-        //public Acknowledgement Acknowledgement { get; set; }
+        public Acknowledgement Acknowledgement { get; set; }
 
-        public string Acknowledgement { get; set; }
+        //public string Acknowledgement { get; set; }
 
         /// <summary>
         /// Maximum Number of Retries that the Producer should make before returning an exception
@@ -42,5 +45,12 @@ namespace DataCrawler.Model.Entity
     {
         public string Topic { get; set; }
         public string Payload { get; set; }
+    }
+
+    public enum Acknowledgement
+    {
+        NoAcknowledgement = 0,
+        OnlyLeaderAcknowledgement = 1,
+        AcknowledgeAll = 3
     }
 }

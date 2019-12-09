@@ -17,7 +17,7 @@ namespace DataCrawler.Producer
         public IProducer<TKey, TValue> CreateClient<TKey, TValue>()
         {
             var config = _kafkaConfigurationProvider.GetSettings();
-            var producerConfig = new ProducerConfig { BootstrapServers = config.KafkaEndpoit};
+            var producerConfig = new ProducerConfig { BootstrapServers = config.KafkaEndpoints};
             //producerConfig.MessageSendMaxRetries = config.MaximumNumberOfRetries;
             //producerConfig.RetryBackoffMs
             //producerConfig.Acks = Acks.All; //config.Acknowledgement;
@@ -34,7 +34,7 @@ namespace DataCrawler.Producer
         public IProducer<TKey, TValue> CreateClient<TKey, TValue>(KafkaClientSetting clientSettings)
         {
             var config = clientSettings;
-            var producerConfig = new ProducerConfig { BootstrapServers = config.KafkaEndpoit };
+            var producerConfig = new ProducerConfig { BootstrapServers = config.KafkaEndpoints };
             //producerConfig.MessageSendMaxRetries = config.MaximumNumberOfRetries;
             ////producerConfig.RetryBackoffMs
             //producerConfig.Acks = Acks.All; //config.Acknowledgement;

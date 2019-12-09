@@ -1,5 +1,4 @@
 ﻿using Confluent.Kafka;
-using DataCrawler.Model.Entity;
 using DataCrawler.Model.InterFace;
 using System;
 using System.Threading.Tasks;
@@ -38,30 +37,19 @@ namespace DataCrawler.Producer
             {
                 producer.Dispose();
             }
-
         }
-        public async Task SendAsync(object message, KafkaClientSetting clientSettings)
+
+        public Task SendAsync(string topic, byte[] message)
         {
-            var producer = _kafkaClientProvider.CreateClient<Null, string>(clientSettings);
-
-            try
-            {
-                var recordMetaData = await producer.ProduceAsync("", new Message<Null, string> { Value = "With Configuration" });
-                _logger.Log($"Delivered '{recordMetaData.Value}' to '{recordMetaData.TopicPartitionOffset}'");
-            }
-            catch (ProduceException<Null, string> e)
-            {
-                _logger.Log($"Delivery failed: {e.Error.Reason}");
-            }
-            catch (Exception e)
-            {
-                _logger.Log(e.ToString());
-            }
-            finally
-            {
-                producer.Dispose();
-            }
+            throw new NotImplementedException();
         }
-
     }
+    public class ConsoleLogger : ILogger
+    {
+        public void Log(string message)
+        {
+            Console.WriteLine(message);
+        }
+    }
+
 }

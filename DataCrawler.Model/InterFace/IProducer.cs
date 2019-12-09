@@ -10,6 +10,6 @@ namespace DataCrawler.Model.InterFace
     {
         Task SendAsync(byte[] message);
 
-        Task SendAsync(object message, KafkaClientSetting clientSettings);
+        Task SendAsync(string topic, byte[] message);
     }
 }

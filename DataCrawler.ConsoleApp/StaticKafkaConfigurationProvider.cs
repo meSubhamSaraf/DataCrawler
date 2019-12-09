@@ -24,7 +24,7 @@ namespace DataCrawler.ConsoleApp
             {
                 //TODO: Need to add validators and null checks for the values here
                 //TODO: Need to make Constants file
-                KafkaEndpoit = string.IsNullOrEmpty(clientSetting.SelectToken("KafkaEndpoint").Value<string>())? "" : clientSetting.SelectToken("KafkaEndpoint").Value<string>(),
+                KafkaEndpoints = string.IsNullOrEmpty(clientSetting.SelectToken("KafkaEndpoint").Value<string>())? "" : clientSetting.SelectToken("KafkaEndpoint").Value<string>(),
                 NumberOfPartitions = string.IsNullOrEmpty(clientSetting.SelectToken("NumberOfPartitions").Value<string>())? "1" : clientSetting.SelectToken("NumberOfPartitions").Value<string>(),
                 //Acknowledgement = string.IsNullOrEmpty(clientSetting.SelectToken("Ack").Value<string>())? "all" : clientSetting.SelectToken("NumberOfPartitions").Value<string>(),
                 //BackPressureThreshold = string.IsNullOrEmpty(clientSetting.SelectToken("backpressurethres").Value<string>())? 1 : clientSetting.SelectToken("backpressu").Value<int>(),
