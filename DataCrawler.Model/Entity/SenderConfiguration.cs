@@ -4,14 +4,14 @@ using System.Text;
 
 namespace DataCrawler.Model.Entity
 {
-    public class KafkaClientSetting
+    public class SenderConfiguration
     {
         /// <summary>
-        /// Kafka Endpoint 
+        /// Endpoint 
         /// Comma (,) seperated multiple endpoints
         /// host:port
         /// </summary>
-        public string KafkaEndpoints { get; set; }
+        public string Endpoints { get; set; }
 
         public string NumberOfPartitions { get; set; }
 
@@ -39,5 +39,18 @@ namespace DataCrawler.Model.Entity
         public int MaximumKilloByteBuffering { get; set; }
 
         public int MaximumMessageBuffering { get; set; }
+    }
+
+    public class Message
+    {
+        public string Topic { get; set; }
+        public string Payload { get; set; }
+    }
+
+    public enum Acknowledgement
+    {
+        NoAcknowledgement = 0,
+        OnlyLeaderAcknowledgement = 1,
+        AcknowledgeAll = 3
     }
 }

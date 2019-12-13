@@ -1,32 +1,34 @@
 ﻿using Confluent.Kafka;
 using DataCrawler.Model.Entity;
 using DataCrawler.Model.InterFace;
+using Newtonsoft.Json.Linq;
 using System;
+using System.IO;
 
 namespace DataCrawler.Producer
 {
     public class ConfluentKafkaClientProvider : IKafkaClientProvider
     {
-        public IProducer<TKey, TValue> CreateClient<TKey, TValue>(KafkaClientSetting clientSettings)
+        static JObject _defaultKafkaClientSetting = JObject.Parse(File.ReadAllText(Path.Combine(Directory.GetCurrentDirectory(), "appsettings.json")));
+        public IProducer<TKey, TValue> CreateClient<TKey, TValue>(SenderConfiguration senderConfiguration)
         {
-            var config = clientSettings;
-            ProducerConfig producerConfig = GetProducerConfig(config);
+            ProducerConfig producerConfig = GetProducerConfig(senderConfiguration);
             return new ProducerBuilder<TKey, TValue>(producerConfig).Build();
         }
 
-        private static ProducerConfig GetProducerConfig(KafkaClientSetting config)
+        private static ProducerConfig GetProducerConfig(SenderConfiguration senderConfiguration)
         {
             return new ProducerConfig
             {
-                BootstrapServers = config.KafkaEndpoints,
-                MessageSendMaxRetries = config.MaximumNumberOfRetries == 0? 3 : config.MaximumNumberOfRetries,
+                BootstrapServers = string.IsNullOrEmpty(senderConfiguration.Endpoints) ? _defaultKafkaClientSetting.SelectToken(Constants.KafkaDefaultConfiguration.Endpoints).Value<string>() : senderConfiguration.Endpoints,
+                MessageSendMaxRetries = senderConfiguration.MaximumNumberOfRetries == 0? _defaultKafkaClientSetting.SelectToken(Constants.KafkaDefaultConfiguration.MaximumNumberOfRetries).Value<int>() : senderConfiguration.MaximumNumberOfRetries,
                 //producerConfig.RetryBackoffMs
-                Acks = GetAcknowledgement(config.Acknowledgement), //config.Acknowledgement;
-                BatchNumMessages = config.BatchNumber == 0 ? 10000 : config.BatchNumber,
-                LingerMs = config.LingerInMilliSecond == 0.0 ? 5.0 : config.LingerInMilliSecond,
-                QueueBufferingBackpressureThreshold = config.BackPressureThreshold == 0 ? 1 : config.BackPressureThreshold,  // Size transmitted from broker and waiting in queue
-                QueueBufferingMaxKbytes = config.MaximumKilloByteBuffering == 0 ? 1048576 : config.MaximumKilloByteBuffering,     //For the size outstanding to be sent to producer queue
-                QueueBufferingMaxMessages = config.MaximumMessageBuffering == 0 ? 100000 : config.MaximumMessageBuffering
+                Acks = GetAcknowledgement(senderConfiguration.Acknowledgement), //config.Acknowledgement;
+                BatchNumMessages = senderConfiguration.BatchNumber == 0 ? _defaultKafkaClientSetting.SelectToken(Constants.KafkaDefaultConfiguration.BatchNumber).Value<int>() : senderConfiguration.BatchNumber,
+                LingerMs = senderConfiguration.LingerInMilliSecond == 0.0 ? _defaultKafkaClientSetting.SelectToken(Constants.KafkaDefaultConfiguration.LingerInMilliSecond).Value<double>() : senderConfiguration.LingerInMilliSecond,
+                QueueBufferingBackpressureThreshold = senderConfiguration.BackPressureThreshold == 0 ? _defaultKafkaClientSetting.SelectToken(Constants.KafkaDefaultConfiguration.BackPressureThreshold).Value<int>() : senderConfiguration.BackPressureThreshold,  // Size transmitted from broker and waiting in queue
+                QueueBufferingMaxKbytes = senderConfiguration.MaximumKilloByteBuffering == 0 ? _defaultKafkaClientSetting.SelectToken(Constants.KafkaDefaultConfiguration.MaximumKilloByteBuffering).Value<int>() : senderConfiguration.MaximumKilloByteBuffering,     //For the size outstanding to be sent to producer queue
+                QueueBufferingMaxMessages = senderConfiguration.MaximumMessageBuffering == 0 ? _defaultKafkaClientSetting.SelectToken(Constants.KafkaDefaultConfiguration.MaximumMessageBuffering).Value<int>() : senderConfiguration.MaximumMessageBuffering
             };
         }
         private static Acks? GetAcknowledgement(Acknowledgement acknowledgement)
@@ -35,11 +37,6 @@ namespace DataCrawler.Producer
             else if (acknowledgement == Acknowledgement.OnlyLeaderAcknowledgement) return Acks.Leader;
             else return Acks.All;
 
-        }
-
-        public IProducer<TKey, TValue> CreateClient<TKey, TValue>()
-        {
-            throw new NotImplementedException();
         }
     }
 

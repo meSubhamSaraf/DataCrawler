@@ -31,10 +31,10 @@ namespace DataCrawler.Producer
             return new ProducerBuilder<TKey, TValue>(producerConfig).Build();
         }
 
-        public IProducer<TKey, TValue> CreateClient<TKey, TValue>(KafkaClientSetting clientSettings)
+        public IProducer<TKey, TValue> CreateClient<TKey, TValue>(SenderConfiguration clientSettings)
         {
             var config = clientSettings;
-            var producerConfig = new ProducerConfig { BootstrapServers = config.KafkaEndpoints };
+            var producerConfig = new ProducerConfig { BootstrapServers = config.Endpoints };
             //producerConfig.MessageSendMaxRetries = config.MaximumNumberOfRetries;
             ////producerConfig.RetryBackoffMs
             //producerConfig.Acks = Acks.All; //config.Acknowledgement;

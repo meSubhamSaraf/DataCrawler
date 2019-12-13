@@ -8,8 +8,6 @@ namespace DataCrawler.Model.InterFace
 {
     public interface ISender
     {
-        Task SendAsync(byte[] message);
-
-        Task SendAsync(string topic, byte[] message);
+        Task SendAsync(string topic, byte[] message);   
     }
 }
