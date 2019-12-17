@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using DataCrawler.Model.Entity;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -15,17 +16,25 @@ namespace DataCrawler.Rest
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public IConfiguration Configuration { get; }
+        public Startup(/*IHostingEnvironment environment*/)
         {
-            Configuration = configuration;
+            var config = new ConfigurationBuilder()
+                            //.SetBasePath(environment.ContentRootPath)
+                            .AddJsonFile("appsettings.json")
+                            //.AddJsonFile($"appsettings{environment.EnvironmentName}.json")
+                            //.AddEnvironmentVariables()
+                            .Build();
+            Configuration = config;
         }
 
-        public IConfiguration Configuration { get; }
+     
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.Configure<AppSetting>(Configuration);//.getsection
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

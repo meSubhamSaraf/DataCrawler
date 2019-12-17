@@ -9,26 +9,26 @@ namespace DataCrawler.Producer
 {
     public class ConfluentKafkaClientProvider : IKafkaClientProvider
     {
-        static JObject _defaultKafkaClientSetting = JObject.Parse(File.ReadAllText(Path.Combine(Directory.GetCurrentDirectory(), "appsettings.json")));
-        public IProducer<TKey, TValue> CreateClient<TKey, TValue>(SenderConfiguration senderConfiguration)
+        static JObject _defaultKafkaClientSetting = JObject.Parse(File.ReadAllText(Path.Combine(Directory.GetCurrentDirectory(), "defaultKafkaSettings.json")));
+        public IProducer<TKey, TValue> CreateClient<TKey, TValue>(KafkaConfiguration kafkaConfiguration)
         {
-            ProducerConfig producerConfig = GetProducerConfig(senderConfiguration);
+            ProducerConfig producerConfig = GetProducerConfig(kafkaConfiguration);
             return new ProducerBuilder<TKey, TValue>(producerConfig).Build();
         }
 
-        private static ProducerConfig GetProducerConfig(SenderConfiguration senderConfiguration)
+        private static ProducerConfig GetProducerConfig(KafkaConfiguration kafkaConfiguration)
         {
             return new ProducerConfig
             {
-                BootstrapServers = string.IsNullOrEmpty(senderConfiguration.Endpoints) ? _defaultKafkaClientSetting.SelectToken(Constants.KafkaDefaultConfiguration.Endpoints).Value<string>() : senderConfiguration.Endpoints,
-                MessageSendMaxRetries = senderConfiguration.MaximumNumberOfRetries == 0? _defaultKafkaClientSetting.SelectToken(Constants.KafkaDefaultConfiguration.MaximumNumberOfRetries).Value<int>() : senderConfiguration.MaximumNumberOfRetries,
+                BootstrapServers = string.IsNullOrEmpty(kafkaConfiguration.KafkaEndpoints) ? _defaultKafkaClientSetting.SelectToken(Constants.KafkaDefaultConfiguration.Endpoints).Value<string>() : kafkaConfiguration.KafkaEndpoints,
+                MessageSendMaxRetries = kafkaConfiguration.MaximumNumberOfRetries == 0? _defaultKafkaClientSetting.SelectToken(Constants.KafkaDefaultConfiguration.MaximumNumberOfRetries).Value<int>() : kafkaConfiguration.MaximumNumberOfRetries,
                 //producerConfig.RetryBackoffMs
-                Acks = GetAcknowledgement(senderConfiguration.Acknowledgement), //config.Acknowledgement;
-                BatchNumMessages = senderConfiguration.BatchNumber == 0 ? _defaultKafkaClientSetting.SelectToken(Constants.KafkaDefaultConfiguration.BatchNumber).Value<int>() : senderConfiguration.BatchNumber,
-                LingerMs = senderConfiguration.LingerInMilliSecond == 0.0 ? _defaultKafkaClientSetting.SelectToken(Constants.KafkaDefaultConfiguration.LingerInMilliSecond).Value<double>() : senderConfiguration.LingerInMilliSecond,
-                QueueBufferingBackpressureThreshold = senderConfiguration.BackPressureThreshold == 0 ? _defaultKafkaClientSetting.SelectToken(Constants.KafkaDefaultConfiguration.BackPressureThreshold).Value<int>() : senderConfiguration.BackPressureThreshold,  // Size transmitted from broker and waiting in queue
-                QueueBufferingMaxKbytes = senderConfiguration.MaximumKilloByteBuffering == 0 ? _defaultKafkaClientSetting.SelectToken(Constants.KafkaDefaultConfiguration.MaximumKilloByteBuffering).Value<int>() : senderConfiguration.MaximumKilloByteBuffering,     //For the size outstanding to be sent to producer queue
-                QueueBufferingMaxMessages = senderConfiguration.MaximumMessageBuffering == 0 ? _defaultKafkaClientSetting.SelectToken(Constants.KafkaDefaultConfiguration.MaximumMessageBuffering).Value<int>() : senderConfiguration.MaximumMessageBuffering
+                Acks = GetAcknowledgement(kafkaConfiguration.Acknowledgement), //config.Acknowledgement;
+                BatchNumMessages = kafkaConfiguration.BatchNumber == 0 ? _defaultKafkaClientSetting.SelectToken(Constants.KafkaDefaultConfiguration.BatchNumber).Value<int>() : kafkaConfiguration.BatchNumber,
+                LingerMs = kafkaConfiguration.LingerInMilliSecond == 0.0 ? _defaultKafkaClientSetting.SelectToken(Constants.KafkaDefaultConfiguration.LingerInMilliSecond).Value<double>() : kafkaConfiguration.LingerInMilliSecond,
+                QueueBufferingBackpressureThreshold = kafkaConfiguration.BackPressureThreshold == 0 ? _defaultKafkaClientSetting.SelectToken(Constants.KafkaDefaultConfiguration.BackPressureThreshold).Value<int>() : kafkaConfiguration.BackPressureThreshold,  // Size transmitted from broker and waiting in queue
+                QueueBufferingMaxKbytes = kafkaConfiguration.MaximumKilloByteBuffering == 0 ? _defaultKafkaClientSetting.SelectToken(Constants.KafkaDefaultConfiguration.MaximumKilloByteBuffering).Value<int>() : kafkaConfiguration.MaximumKilloByteBuffering,     //For the size outstanding to be sent to producer queue
+                QueueBufferingMaxMessages = kafkaConfiguration.MaximumMessageBuffering == 0 ? _defaultKafkaClientSetting.SelectToken(Constants.KafkaDefaultConfiguration.MaximumMessageBuffering).Value<int>() : kafkaConfiguration.MaximumMessageBuffering
             };
         }
         private static Acks? GetAcknowledgement(Acknowledgement acknowledgement)

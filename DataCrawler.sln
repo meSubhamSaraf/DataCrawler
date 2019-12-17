@@ -23,7 +23,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataCrawler.ConsoleApp", "D
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataCrawler.Tests", "DataCrawler.Tests\DataCrawler.Tests.csproj", "{B5FA2583-A591-4FBC-ACED-671A16DF4842}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataCrawler.Rest", "DataCrawler.Rest\DataCrawler.Rest.csproj", "{66773C88-9821-446C-9F82-F31E43854886}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataCrawler.Web", "DataCrawler.Rest\DataCrawler.Web.csproj", "{66773C88-9821-446C-9F82-F31E43854886}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataCrawler.Configuration", "DataCrwaler.Configuration\DataCrawler.Configuration.csproj", "{91D183D8-C44F-4E45-94BB-3FE8B5DC5142}"
 EndProject

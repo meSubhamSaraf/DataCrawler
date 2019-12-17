@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace DataCrawler.Producer
 {
-    public class FireHoseSender:ISender
+    public class FireHoseSender:IProducer
     {
         public FireHoseSender(SenderConfiguration senderConfiguration)
         {

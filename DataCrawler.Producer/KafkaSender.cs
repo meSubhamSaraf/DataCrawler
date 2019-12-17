@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace DataCrawler.Producer
 {
-    public class KafkaSender : ISender
+    public class KafkaSender : IProducer
     {
         private readonly IKafkaClientProvider _kafkaClientProvider;
         private readonly ILogger _logger;

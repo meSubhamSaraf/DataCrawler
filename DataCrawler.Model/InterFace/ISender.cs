@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace DataCrawler.Model.InterFace
 {
-    public interface IProducer
+    public interface ISender
     {
-        Task SendAsync(string topic, byte[] message);   
+        Task<MessageQueueResponse> SendAsync(MessageQueueRequest messageQueueRequest, Dictionary<string, IDictionary<string, IConfiguration>> configuration);
     }
 }

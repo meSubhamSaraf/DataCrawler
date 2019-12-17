@@ -4,9 +4,9 @@ namespace DataCrawler.Producer
 {
     public class ConfiGurationManager
     {
-        public static ISender GetSender(string config)
-        {
-            return SenderFactory.GetSender(config);
-        }
+        //public static ISender GetSender(string config)
+        //{
+        //    return SenderFactory.GetSender(config);
+        //}
     }
 }

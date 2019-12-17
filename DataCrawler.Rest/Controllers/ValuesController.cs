@@ -2,14 +2,27 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using DataCrawler.Model.Entity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
+using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
+using DataCrawler.Producer;
+using DataCrawler.Model.InterFace;
 
 namespace DataCrawler.Rest.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ValuesController : ControllerBase
+    public class DatapumpController : ControllerBase
     {
+        private readonly IDataDumpService _dataDumpService;
+
+        public DatapumpController(IDataDumpService dataDumpService)
+        {
+            _dataDumpService = dataDumpService;
+        }
+
         // GET api/values
         [HttpGet]
         public ActionResult<IEnumerable<string>> Get()
@@ -26,8 +39,12 @@ namespace DataCrawler.Rest.Controllers
 
         // POST api/values
         [HttpPost]
-        public void Post([FromBody] string value)
+        public async Task<MessageQueueResponse> QueueMessageAsync([FromBody] MessageQueueRequest messageQueueRequest)
         {
+            var response = await _dataDumpService.QueueMessageAsync(messageQueueRequest);
+            if (response?.Errors.Any() == false)
+                Ok(response);
+            return BadRequest(response);
         }
 
         // PUT api/values/5

@@ -1,0 +1,10 @@
+﻿{
+  "endpoints": "localhost:9092",
+  "numberOfPartitions": 1,
+  "maximumNumberOfRetries": 3,
+  "batchNumber": 10000,
+  "lingerInMilliSecond": 5.0,
+  "backPressureThreshold": 1,
+  "maximumKilloByteBuffering": 1048576,
+  "maximumMessageBuffering": 100000
+}

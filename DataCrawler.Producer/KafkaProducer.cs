@@ -6,26 +6,19 @@ using System.Threading.Tasks;
 
 namespace DataCrawler.Producer
 {
-    public class KafkaProducer : ISender
+    public class KafkaProducer : IProducer
     {
         private  IProducer<Null, byte[]> _producer;
-        private static KafkaProducer _kafkaProducer;
+        private KafkaConfiguration _kafkaConfiguration;
 
         private ILogger _logger;
-        private KafkaProducer(SenderConfiguration senderConfiguration,ILogger logger = null)
+        public KafkaProducer(KafkaConfiguration kafkaConfiguration, ILogger logger = null)
         {
-            _producer = new ConfluentKafkaClientProvider().CreateClient<Null, byte[]>(senderConfiguration);
+            _kafkaConfiguration = kafkaConfiguration;
+            _producer = new ConfluentKafkaClientProvider().CreateClient<Null, byte[]>(kafkaConfiguration);
             _logger = logger == null ? new ConsoleLogger() : logger;
         }
 
-
-        public static ISender GetInstance(SenderConfiguration senderConfiguration, ILogger logger = null)
-        {
-            if (_kafkaProducer != null)
-                return _kafkaProducer;
-            else
-             return new KafkaProducer(senderConfiguration,logger);
-        }
         public async Task SendAsync(string topic, byte[] message)
         {
             try

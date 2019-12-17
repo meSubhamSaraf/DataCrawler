@@ -7,6 +7,6 @@ namespace DataCrawler.Model.InterFace
     {
         //IProducer<TKey, TValue> CreateClient<TKey, TValue>();
 
-        IProducer<TKey, TValue> CreateClient<TKey, TValue>(SenderConfiguration clientSettings);
+        IProducer<TKey, TValue> CreateClient<TKey, TValue>(KafkaConfiguration clientSettings);
     }
 }
