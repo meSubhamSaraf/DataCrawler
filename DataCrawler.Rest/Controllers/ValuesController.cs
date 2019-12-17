@@ -39,11 +39,11 @@ namespace DataCrawler.Rest.Controllers
 
         // POST api/values
         [HttpPost]
-        public async Task<MessageQueueResponse> QueueMessageAsync([FromBody] MessageQueueRequest messageQueueRequest)
+        public async Task<IActionResult> QueueMessageAsync([FromBody] MessageQueueRequest messageQueueRequest)
         {
             var response = await _dataDumpService.QueueMessageAsync(messageQueueRequest);
             if (response?.Errors.Any() == false)
-                Ok(response);
+                return Ok(response);
             return BadRequest(response);
         }
 

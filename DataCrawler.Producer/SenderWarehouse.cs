@@ -4,6 +4,7 @@ using Microsoft.Extensions.Options;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -59,13 +60,15 @@ namespace DataCrawler.Producer
         }
     }
 
-    public class ConfigurationResolver : IConfigurationResolver
+    public class AppSettingConfigurationBuilder : IConfigurationBuilder
     {
         private Dictionary<string,IDictionary<string, IConfiguration>> _userToConfigurationMapper = new Dictionary<string,IDictionary<string,IConfiguration>>();
 
-        public  Dictionary<string, IDictionary<string, IConfiguration>> Resolve(AppSetting appSetting,string userId,string topic)
-        { 
-            foreach(var user in appSetting.users)
+        public  Dictionary<string, IDictionary<string, IConfiguration>> Build()
+        {
+            var config = JObject.Parse(File.ReadAllText(Path.Combine(Directory.GetCurrentDirectory(), "appsettings.json")));
+            AppSetting appSetting = config.ToObject<AppSetting>();
+            foreach (var user in appSetting.users)
             {
                 switch (user.type.ToLower())
                 {

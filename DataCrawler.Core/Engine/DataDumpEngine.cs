@@ -11,10 +11,10 @@ namespace DataCrawler.Core.Engine
 {
     public class DataDumpEngine : IDataDumpEngine
     {
-        private readonly IConfigurationResolver _configurationResolver;
+        private readonly IConfigurationBuilder _configurationResolver;
         private ISender _sender;
 
-        public DataDumpEngine(IConfigurationResolver configurationResolver, ISender sender)
+        public DataDumpEngine(IConfigurationBuilder configurationResolver, ISender sender)
         {
             _configurationResolver = configurationResolver;
             _sender = sender;
@@ -24,8 +24,8 @@ namespace DataCrawler.Core.Engine
         {
 
 
-            var config = JObject.Parse(File.ReadAllText(Path.Combine(Directory.GetCurrentDirectory(), "appsettingsettings.json")));
-            var configuration = _configurationResolver.Resolve(config.ToObject<AppSetting>(), messageQueueRequest.UserId, messageQueueRequest.StreamName);
+            //var config = JObject.Parse(File.ReadAllText(Path.Combine(Directory.GetCurrentDirectory(), "appsettings.json")));
+            //var configuration = _configurationResolver.Build(config.ToObject<AppSetting>(), messageQueueRequest.UserId, messageQueueRequest.StreamName);
             return _sender.SendAsync(messageQueueRequest, configuration);
 
 

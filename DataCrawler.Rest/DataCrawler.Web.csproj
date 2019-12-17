@@ -29,6 +29,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\DataCrawler.Core\DataCrawler.Core.csproj" />
     <ProjectReference Include="..\DataCrawler.Model\DataCrawler.Model.csproj" />
     <ProjectReference Include="..\DataCrawler.Producer\DataCrawler.Producer.csproj" />
   </ItemGroup>

@@ -2,7 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using DataCrawler.Core.Engine;
+using DataCrawler.Core.Service;
 using DataCrawler.Model.Entity;
+using DataCrawler.Model.InterFace;
+using DataCrawler.Producer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -16,7 +20,7 @@ namespace DataCrawler.Rest
 {
     public class Startup
     {
-        public IConfiguration Configuration { get; }
+        public Microsoft.Extensions.Configuration.IConfiguration Configuration { get; }
         public Startup(/*IHostingEnvironment environment*/)
         {
             var config = new ConfigurationBuilder()
@@ -34,6 +38,12 @@ namespace DataCrawler.Rest
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddTransient<IDataDumpService,DataDumpService>();
+            services.AddTransient<IDataDumpValidator, DataDumpValidator>();
+            services.AddTransient<IDataDumpEngine, DataDumpEngine>();
+            services.AddTransient<ISender, Sender>();
+            services.AddTransient<IProducerFactory, ProducerFactory>();
+            services.AddTransient<Model.InterFace.IConfigurationBuilder, AppSettingConfigurationBuilder>();
             services.Configure<AppSetting>(Configuration);//.getsection
         }
 

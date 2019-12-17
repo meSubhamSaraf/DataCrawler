@@ -13,8 +13,8 @@ namespace DataCrawler.Model.InterFace
 
     }
 
-    public interface IConfigurationResolver
+    public interface IConfigurationBuilder
     {
-        Dictionary<string, IDictionary<string, IConfiguration>> Resolve(AppSetting appSetting, string userId, string topic);
+        Dictionary<string, IDictionary<string, IConfiguration>> Build();
     }
 }
