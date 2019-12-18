@@ -6,14 +6,11 @@ using System.Collections.Generic;
 
 namespace DataCrawler.Producer
 {
-    public class SenderFactory
+    public class ProducerFactory : IProducerFactory
     {
         private Dictionary<string, IProducer> _sender = new Dictionary<string, IProducer>();
-        public static IProducer GetSender(IConfiguration config)
+        public IProducer GetProducer(IConfiguration config)
         {
-            //dynamic senderconfig = JObject.Parse(config);
-            //string type = senderconfig.type;
-            //JObject configObject = senderconfig.config;
             var type = config.Type;
             switch (type.ToLower())
             {
@@ -25,13 +22,5 @@ namespace DataCrawler.Producer
                     return null;
             } 
         }
-
-        //public static ISender GetSender(IConfiguration configuration)
-        //{
-        //    if(configuration is KafkaConfiguration)
-        //    {
-                
-        //    } 
-        //}
     }
 }

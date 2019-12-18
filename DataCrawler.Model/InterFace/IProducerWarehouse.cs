@@ -4,8 +4,8 @@ using System.Text;
 
 namespace DataCrawler.Model.InterFace
 {
-    public interface IProducerFactory
+    public interface IProducerWarehouse
     {
-        IProducer GetProducer(IConfiguration configuration);
+        IProducer GetProducer(string userId, string streamName);
     }
 }

@@ -19,12 +19,13 @@ namespace DataCrawler.Producer
             _logger = logger == null ? new ConsoleLogger() : logger;
         }
 
-        public async Task SendAsync(string topic, byte[] message)
+        public async Task<MessageQueueResponse> SendAsync(string topic, byte[] message)
         {
             try
             {
                var recordMetaData = await _producer.ProduceAsync(topic, new Message<Null, byte[]> { Value = message });
-                _logger.Log($"Delivered '{recordMetaData.Value}' to '{recordMetaData.TopicPartitionOffset}'");
+               _logger.Log($"Delivered '{recordMetaData.Value}' to '{recordMetaData.TopicPartitionOffset}'");
+                return new MessageQueueResponse() { Status = MessageStatus.Queuued };
             }
             catch (ProduceException<Null, string> e)
             {
@@ -38,6 +39,7 @@ namespace DataCrawler.Producer
             //{
             //    _producer.Dispose();
             //}
+            return new MessageQueueResponse() { Status = MessageStatus.NotQueued };
         }
     }
 }

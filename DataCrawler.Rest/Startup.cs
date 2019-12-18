@@ -38,13 +38,14 @@ namespace DataCrawler.Rest
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-            services.AddTransient<IDataDumpService,DataDumpService>();
             services.AddTransient<IDataDumpValidator, DataDumpValidator>();
             services.AddTransient<IDataDumpEngine, DataDumpEngine>();
-            services.AddTransient<ISender, Sender>();
+            services.AddTransient<IDataDumpService, DataDumpService>();
+            //services.AddTransient<ISender, Sender>();
+            services.AddSingleton<Model.InterFace.IConfigurationBuilder, AppSettingConfigurationBuilder>();
             services.AddTransient<IProducerFactory, ProducerFactory>();
-            services.AddTransient<Model.InterFace.IConfigurationBuilder, AppSettingConfigurationBuilder>();
-            services.Configure<AppSetting>(Configuration);//.getsection
+            services.AddSingleton<IProducerWarehouse, ProducerWarehouse>();
+            //services.Configure<AppSetting>(Configuration);//.getsection
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

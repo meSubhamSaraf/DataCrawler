@@ -1,4 +1,5 @@
 ﻿using Confluent.Kafka;
+using DataCrawler.Model.Entity;
 using DataCrawler.Model.InterFace;
 using System;
 using System.Threading.Tasks;
@@ -16,6 +17,11 @@ namespace DataCrawler.Producer
             _logger = logger;
         }
         public Task SendAsync(string topic, byte[] message)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<MessageQueueResponse> IProducer.SendAsync(string topic, byte[] message)
         {
             throw new NotImplementedException();
         }

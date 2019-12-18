@@ -42,8 +42,8 @@ namespace DataCrawler.Rest.Controllers
         public async Task<IActionResult> QueueMessageAsync([FromBody] MessageQueueRequest messageQueueRequest)
         {
             var response = await _dataDumpService.QueueMessageAsync(messageQueueRequest);
-            if (response?.Errors.Any() == false)
-                return Ok(response);
+            if (response != null && response.Status == MessageStatus.Queuued && response.Errors == null)
+                return Ok();
             return BadRequest(response);
         }
 

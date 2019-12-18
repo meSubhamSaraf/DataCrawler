@@ -28,5 +28,10 @@ namespace DataCrawler.Producer
         {
             throw new NotImplementedException();
         }
+
+        Task<MessageQueueResponse> IProducer.SendAsync(string topic, byte[] message)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

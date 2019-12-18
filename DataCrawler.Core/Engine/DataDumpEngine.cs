@@ -12,22 +12,18 @@ namespace DataCrawler.Core.Engine
     public class DataDumpEngine : IDataDumpEngine
     {
         private readonly IConfigurationBuilder _configurationResolver;
-        private ISender _sender;
+        private IProducerWarehouse _producerWarehouse;
 
-        public DataDumpEngine(IConfigurationBuilder configurationResolver, ISender sender)
+        public DataDumpEngine(IConfigurationBuilder configurationResolver, IProducerWarehouse producerWarehouse)
         {
             _configurationResolver = configurationResolver;
-            _sender = sender;
+            _producerWarehouse = producerWarehouse;
         }
 
         public Task<MessageQueueResponse> QueueMessageAsync(MessageQueueRequest messageQueueRequest)
         {
-
-
-            //var config = JObject.Parse(File.ReadAllText(Path.Combine(Directory.GetCurrentDirectory(), "appsettings.json")));
-            //var configuration = _configurationResolver.Build(config.ToObject<AppSetting>(), messageQueueRequest.UserId, messageQueueRequest.StreamName);
-            return _sender.SendAsync(messageQueueRequest, configuration);
-
+            IProducer producer = _producerWarehouse.GetProducer(messageQueueRequest.UserId, messageQueueRequest.StreamName);
+            return producer.SendAsync(messageQueueRequest.StreamName, Encoding.ASCII.GetBytes(messageQueueRequest.Message));
 
         }
     }

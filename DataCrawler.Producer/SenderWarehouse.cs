@@ -32,12 +32,12 @@ namespace DataCrawler.Producer
             if (_userToSenderMapping.ContainsKey(userId) == false)
             {
                 Dictionary<string, IProducer> topicToSender = new Dictionary<string, IProducer>();
-                topicToSender.Add(topic, SenderFactory.GetSender(configuration));
+                topicToSender.Add(topic, new ProducerFactory().GetProducer(configuration));
                 _userToSenderMapping.Add(userId,topicToSender);
             }
             if(_userToSenderMapping[userId].ContainsKey(topic) == false)
             {
-                _userToSenderMapping[userId].Add(topic, SenderFactory.GetSender(configuration));
+                _userToSenderMapping[userId].Add(topic, new ProducerFactory().GetProducer(configuration));
             }
 
             return _userToSenderMapping[userId][topic];
